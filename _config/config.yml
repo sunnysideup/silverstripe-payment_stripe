@@ -1,0 +1,8 @@
+---
+Name: payment_stripe
+After: 'framework/*','cms/*', 'ecommerce/*'
+---
+
+Member:
+  extensions:
+    - EcommercePayment_Stripe_CustomerDetails
