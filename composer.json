@@ -1,19 +1,26 @@
-
 {
     "name": "sunnysideup/payment_stripe",
     "type": "silverstripe-module",
     "description": "Stripe Payment Module for Silverstripe E-commerce ",
-    "keywords": ["e-commerce", "shop", "ecommerce", "payment", "stripe", "e-commerce payment", "credit card payment", "sales"],
+    "keywords": [
+        "e-commerce",
+        "shop",
+        "ecommerce",
+        "payment",
+        "stripe",
+        "e-commerce payment",
+        "credit card payment",
+        "sales"
+    ],
     "license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
-    "authors":[
+    "authors": [
         {
             "name": "Nicolaas Francken",
-            "homepage": "https://github.com/sunnysideup",
-            "email" : "modules@sunnysideup.co.nz",
-            "role" : "lead developer"
+            "email": "modules@sunnysideup.co.nz",
+            "role": "lead developer"
         }
     ],
-    "require":{
+    "require": {
         "silverstripe/framework": "^3.4",
         "sunnysideup/ecommerce": "*",
         "stripe/stripe-php": "v3.5.0"
@@ -21,5 +28,4 @@
     "extra": {
         "installer-name": "payment_stripe"
     }
-
 }
