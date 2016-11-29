@@ -3,6 +3,9 @@
     "type": "silverstripe-module",
     "description": "Stripe Payment Module for Silverstripe E-commerce ",
     "keywords": [
+        "Silverstripe-CMS",
+        "CMS",
+        "Silverstripe",
         "e-commerce",
         "shop",
         "ecommerce",
@@ -21,9 +24,10 @@
         }
     ],
     "require": {
-        "silverstripe/framework": "^3.4",
+        "silverstripe/framework": "~3.1",
         "sunnysideup/ecommerce": "*",
-        "stripe/stripe-php": "v3.5.0"
+        "stripe/stripe-php": "v3.5.0",
+        "silverstripe/cms": "~3.1"
     },
     "extra": {
         "installer-name": "payment_stripe"

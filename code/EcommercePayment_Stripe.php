@@ -9,7 +9,8 @@
  *
  * @package payment
  */
-class EcommercePayment_Stripe extends EcommercePayment  {
+class EcommercePayment_Stripe extends EcommercePayment
+{
 
     /**
      * @var string
@@ -71,7 +72,8 @@ class EcommercePayment_Stripe extends EcommercePayment  {
         "StripeID" => true
     );
 
-    function getCMSFields(){
+    public function getCMSFields()
+    {
         $fields = parent::getCMSFields();
         $fields->addFieldToTab("Root.Debug", new ReadonlyField("ClassName"));
         $fields->addFieldToTab("Root.Debug", new LiteralField("Request", "<h2>Request</h2>".$this->getRequestDetails()));
@@ -89,7 +91,8 @@ class EcommercePayment_Stripe extends EcommercePayment  {
      *
      * @return FieldList
      */
-    function getPaymentFormFields(){
+    public function getPaymentFormFields()
+    {
         $formHelper = $this->ecommercePaymentFormSetupAndValidationObject();
         $fieldList = $formHelper->getCreditCardPaymentFormFields($this);
         $fieldList->insertBefore(
@@ -108,7 +111,8 @@ class EcommercePayment_Stripe extends EcommercePayment  {
      *
      * @return array
      */
-    function getPaymentFormRequirements(){
+    public function getPaymentFormRequirements()
+    {
         $formHelper = $this->ecommercePaymentFormSetupAndValidationObject();
         return $formHelper->getCreditCardPaymentFormFieldsRequired($this);
     }
@@ -121,7 +125,8 @@ class EcommercePayment_Stripe extends EcommercePayment  {
      *
      * @return Boolean
      */
-    function validatePayment($data, $form){
+    public function validatePayment($data, $form)
+    {
         $formHelper = $this->ecommercePaymentFormSetupAndValidationObject();
         return $formHelper->validateAndSaveCreditCardInformation($data, $form, $this);
     }
@@ -141,7 +146,8 @@ class EcommercePayment_Stripe extends EcommercePayment  {
      *
      * @return EcommercePaymentResult
      */
-    function processPayment($data, $form){
+    public function processPayment($data, $form)
+    {
         //get variables
         $this->retrieveVariables();
         $this->instantiateAPI();
@@ -166,14 +172,13 @@ class EcommercePayment_Stripe extends EcommercePayment  {
         //now we can save the details:
         $this->recordTransaction($requestData, $responseData);
 
-        if(
+        if (
             $responseData &&
             $responseData->status == "succeeded"
         ) {
             $this->Status = "Success";
             $returnObject = EcommercePayment_Success::create();
-        }
-        else {
+        } else {
             $this->Status = "Failure";
             $returnObject = EcommercePayment_Failure::create();
         }
@@ -186,7 +191,8 @@ class EcommercePayment_Stripe extends EcommercePayment  {
      *
      * @return string (HTML)
      */
-    function getRequestDetails(){
+    public function getRequestDetails()
+    {
         return "<pre>".print_r(unserialize($this->Request), 1)."</pre>";
     }
 
@@ -194,7 +200,8 @@ class EcommercePayment_Stripe extends EcommercePayment  {
      *
      * @return string (HTML)
      */
-    function myResponseDetails(){
+    public function myResponseDetails()
+    {
         return "<pre>".print_r(unserialize($this->Response), 1)."</pre>";
     }
 
@@ -237,20 +244,19 @@ class EcommercePayment_Stripe extends EcommercePayment  {
      *
      *
      */
-    protected function retrieveVariables(){
-        if(!$this->_processing_idempotency_key) {
-            if($this->ID) {
+    protected function retrieveVariables()
+    {
+        if (!$this->_processing_idempotency_key) {
+            if ($this->ID) {
                 $hash = hash("SHA1", $this->ID."_".$this->ClassName);
-            }
-            else {
-                $hash = hash("SHA1", rand(0,9999999999999999));
+            } else {
+                $hash = hash("SHA1", rand(0, 9999999999999999));
             }
             $this->_processing_idempotency_key =  array("idempotency_key" => $hash);
             $this->_processing_check_code = substr($hash, 0, 22);
-            if($this->OrderID) {
+            if ($this->OrderID) {
                 $order = $this->Order();
-            }
-            else {
+            } else {
                 $order = ShoppingCart::current_order();
             }
             $this->_processing_order = $order;
@@ -264,7 +270,7 @@ class EcommercePayment_Stripe extends EcommercePayment  {
                 "EcommercePaymentID" => $this->ID
             );
             $this->_processing_statement_description = $this->_processing_check_code;
-            if($this->hasFullCardNumber()) {
+            if ($this->hasFullCardNumber()) {
                 $this->_processing_card = array(
                     'number' => $this->CardNumber,
                     'exp_month' => $this->_processing_month,
@@ -284,7 +290,8 @@ class EcommercePayment_Stripe extends EcommercePayment  {
      *
      *
      */
-    protected function instantiateAPI(){
+    protected function instantiateAPI()
+    {
         $api = $this->Config()->get("api_key_private");
         \Stripe\Stripe::setApiKey($api);
     }
@@ -293,8 +300,9 @@ class EcommercePayment_Stripe extends EcommercePayment  {
      * remove the card details
      * for securityu reasons
      */
-    protected function removeCardDetails(){
-        if($this->hasFullCardNumber()) {
+    protected function removeCardDetails()
+    {
+        if ($this->hasFullCardNumber()) {
             $this->CardNumber = $this->_processing_truncated_card;
             $this->_processing_card = null;
         }
@@ -304,7 +312,8 @@ class EcommercePayment_Stripe extends EcommercePayment  {
      * is the full credit card recorded?
      * @return boolean
      */
-    protected function hasFullCardNumber(){
+    protected function hasFullCardNumber()
+    {
         return strlen($this->CardNumber) > 12;
     }
 
@@ -312,19 +321,18 @@ class EcommercePayment_Stripe extends EcommercePayment  {
      * @param mixed $requestData;
      * @param mixed $responseData;
      */
-    protected function recordTransaction($requestData, $responseData){
+    protected function recordTransaction($requestData, $responseData)
+    {
         $this->Request = serialize($requestData);
         $this->Response = serialize($responseData);
-        if($responseData && isset($responseData->id)) {
+        if ($responseData && isset($responseData->id)) {
             $this->StripeID = $responseData->id;
             //$this->IdemPotencyKey = $responseData->getLastReponse()->header["Idempotency-Key"];
         }
-        if($this->_processing_amount) {
+        if ($this->_processing_amount) {
             //no idea why we need this!!!
             $this->Amount->Amount = $this->_processing_amount / 100;
         }
         $this->Message = _t("EcommercePayment_Stripe", "TRANSACTION_CODE").": ".$this->_processing_check_code;
     }
-
-
 }

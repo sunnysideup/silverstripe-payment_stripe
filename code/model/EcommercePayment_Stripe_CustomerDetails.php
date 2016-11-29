@@ -1,8 +1,8 @@
 <?php
 
 
-class EcommercePayment_Stripe_CustomerDetails extends DataExtension {
-
+class EcommercePayment_Stripe_CustomerDetails extends DataExtension
+{
     private static $db = array(
         "StripeCustomerID" => "Varchar(32)",
         "CreditCardDescription" => "Varchar(64)"
@@ -26,19 +26,24 @@ class EcommercePayment_Stripe_CustomerDetails extends DataExtension {
      *
      * @return Boolean
      */
-    public function CreditCardHasBeenRecorded(){return $this->getCreditCardHasBeenRecorded();}
-    public function getCreditCardHasBeenRecorded(){
+    public function CreditCardHasBeenRecorded()
+    {
+        return $this->getCreditCardHasBeenRecorded();
+    }
+    public function getCreditCardHasBeenRecorded()
+    {
         return $this->owner->StripeCustomerID ? true : false;
     }
 
 
-    function updateCMSFields(FieldList $fields){
+    public function updateCMSFields(FieldList $fields)
+    {
         $fieldLabels = $this->owner->FieldLabels();
         $fields->addFieldToTab(
             "Root.StripePayments",
             ReadonlyField::create("CreditCardHasBeenRecordedNice", $fieldLabels["CreditCardHasBeenRecorded"], $this->owner->obj("CreditCardHasBeenRecorded")->nice())
         );
-        if($this->owner->StripeCustomerID) {
+        if ($this->owner->StripeCustomerID) {
             $dropdownArray = array(
                 $this->owner->StripeCustomerID => $this->owner->CreditCardDescription,
                 null => _t("EcommercePayment_Stripe_CustomerDetails.REMOVE_CARD", "- REMOVE CARD -")
@@ -50,17 +55,18 @@ class EcommercePayment_Stripe_CustomerDetails extends DataExtension {
         }
     }
 
-    function augmentEcommerceFields($fields) {
+    public function augmentEcommerceFields($fields)
+    {
         $fieldLabels = $this->owner->FieldLabels();
         $fields->push(
             ReadonlyField::create("CreditCardHasBeenRecordedNice", $fieldLabels["CreditCardHasBeenRecorded"], $this->owner->obj("CreditCardHasBeenRecorded")->nice())
         );
     }
 
-    function onBeforeWrite(){
-        if(!$this->owner->StripeCustomerID) {
+    public function onBeforeWrite()
+    {
+        if (!$this->owner->StripeCustomerID) {
             $this->owner->CreditCardDescription = null;
         }
     }
-
 }

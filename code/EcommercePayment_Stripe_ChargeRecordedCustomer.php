@@ -9,7 +9,8 @@
  *
  * @package payment
  */
-class EcommercePayment_Stripe_ChargeRecordedCustomer extends EcommercePayment_Stripe  {
+class EcommercePayment_Stripe_ChargeRecordedCustomer extends EcommercePayment_Stripe
+{
 
     /**
      * Perform payment processing for the type of
@@ -26,18 +27,18 @@ class EcommercePayment_Stripe_ChargeRecordedCustomer extends EcommercePayment_St
      *
      * @return EcommercePaymentResult
      */
-    function processPayment($data, $form){
+    public function processPayment($data, $form)
+    {
         //get variables
         $responseData = null;
         //get variables
         $this->retrieveVariables();
         $this->instantiateAPI();
         //less than fifty cents then it is fine ...
-        if($this->_processing_amount < 50) {
+        if ($this->_processing_amount < 50) {
             $this->Status = "Success";
             $returnObject = EcommercePayment_Success::create();
-        }
-        elseif($this->_processing_member && $this->_processing_member->CreditCardHasBeenRecorded()) {
+        } elseif ($this->_processing_member && $this->_processing_member->CreditCardHasBeenRecorded()) {
             //if currency has been pre-set use this
             $requestData = array(
                 'customer' => $this->_processing_member->StripeCustomerID,
@@ -56,21 +57,17 @@ class EcommercePayment_Stripe_ChargeRecordedCustomer extends EcommercePayment_St
             //no idea why we need this!!!
             $this->Amount->Amount = $this->_processing_amount / 100;
         }
-        if(
+        if (
             $responseData &&
             $responseData->status == "succeeded"
         ) {
             $this->Status = "Success";
             $returnObject = EcommercePayment_Success::create();
-        }
-        else {
+        } else {
             $this->Status = "Failure";
             $returnObject = EcommercePayment_Failure::create();
         }
         $this->write();
         return $returnObject;
     }
-
-
-
 }
