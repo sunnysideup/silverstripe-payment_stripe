@@ -57,11 +57,11 @@ class EcommercePayment_Stripe_ChargeRecordedAndAuthorizedCustomer extends Ecomme
             }
         }
         if (
-            $ch && 
-            $responseData && 
+            $ch &&
+            $responseData &&
             (
                 isset($responseData->captured) && $responseData->captured == true
-            ) 
+            )
             &&
             (
                 isset($responseData->status) && $responseData->status == "succeeded"
