@@ -1,13 +1,12 @@
 <?php
-class PaymentStripeTest extends SapphireTest {
+class PaymentStripeTest extends SapphireTest
+{
+    protected $usesDatabase = false;
 
-	protected $usesDatabase = false;
+    protected $requiredExtensions = array();
 
-	protected $requiredExtensions = array();
-
-	public function testMyMethod() {
-		$this->assertEquals(1, 1);
-	}
-
+    public function testMyMethod()
+    {
+        $this->assertEquals(1, 1);
+    }
 }
-
