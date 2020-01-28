@@ -91,7 +91,7 @@ class EcommercePayment_Stripe extends EcommercePayment
      *
      * @return FieldList
      */
-    public function getPaymentFormFields()
+    public function getPaymentFormFields($amount = 0, $order = null)
     {
         $formHelper = $this->ecommercePaymentFormSetupAndValidationObject();
         $fieldList = $formHelper->getCreditCardPaymentFormFields($this);

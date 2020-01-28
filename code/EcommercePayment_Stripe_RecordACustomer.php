@@ -107,7 +107,7 @@ class EcommercePayment_Stripe_RecordACustomer extends EcommercePayment_Stripe
      *
      * @return FieldList
      */
-    public function getPaymentFormFields()
+    public function getPaymentFormFields($amount = 0, $order = null)
     {
         $this->retrieveVariables();
         if ($this->_processing_member && $this->_processing_member->CreditCardHasBeenRecorded()) {
@@ -115,7 +115,7 @@ class EcommercePayment_Stripe_RecordACustomer extends EcommercePayment_Stripe
                 ReadonlyField::create("CreditCardOnFile", _t("Stripe.CREDIT_CARD_ON_FILE", "Credit Card on file"), $this->memberCurrentCardDescription())
             );
         } else {
-            return parent::getPaymentFormFields();
+            return parent::getPaymentFormFields($amount, $order);
         }
     }
 
